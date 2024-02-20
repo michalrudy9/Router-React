@@ -8,6 +8,7 @@ import {
 import EventItem from "../components/EventItem";
 import EventsList from "../components/EventsList";
 import { Suspense } from "react";
+import { getAuthToken } from "../util/auth";
 
 function EventDetailPage() {
   const { event, events } = useRouteLoaderData("event-details");
@@ -64,8 +65,13 @@ export async function eventDetailLoader({ request, params }) {
 
 export async function deletEventAction({ params, request }) {
   const eventId = params.eventId;
+  const token = getAuthToken();
+
   const response = await fetch("http://localhost:8080/events/" + eventId, {
     method: request.method,
+    headers: {
+      Authorization: "Bearer " + token,
+    },
   });
 
   if (!response.ok) {
